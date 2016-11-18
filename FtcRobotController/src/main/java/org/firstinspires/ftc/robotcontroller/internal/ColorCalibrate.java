@@ -9,20 +9,21 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  */
 @Autonomous(name = "ColorCalibrate")
 public class ColorCalibrate extends LinearOpMode{
+    ColorSensor CS;
 
-    ColorSensor CSS;
     double red;
     double blue;
     double green;
     @Override public void runOpMode ()throws InterruptedException {
         waitForStart();
-        CSS = hardwareMap.colorSensor.get("CSS");
 
+        CS = hardwareMap.colorSensor.get("CS");
+        CS.enableLed(false);
         while(opModeIsActive()){
 
-            red = CSS.red();
-            blue = CSS.blue();
-            green = CSS.green();
+            red = CS.red();
+            blue = CS.blue();
+            green = CS.green();
 
             telemetry.update();
             telemetry.addData("Red", red);
