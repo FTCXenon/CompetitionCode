@@ -18,20 +18,22 @@ public class Auto extends LinearOpMode {
     DcMotor LB;
     DcMotor RB;
 
+    GyroSensor gyroSensor;
+
     double speed = 0.2;
     double targetHeading = 0.0;
     double gain = 0.007;
-    double steeringError;
+    double angleDifference;
     double leftPower;
     double rightPower;
-    int currentHeading = 0;
-    double steeringAdjustment = 0;
+    double turnPower = 0;
 
     double initialvalueLF;
     double initialvalueRF;
     double targetValue;
     double currentRight;
     double currentLeft;
+    double currentHeading = 0.0;
     void DriveDistance(double distance) {
 
         double targetValue = (distance / (3.141592653589793238462 * 4)) * 1440;
@@ -58,13 +60,36 @@ public class Auto extends LinearOpMode {
             }
             telemetry.update();
             telemetry.addData("right front", RF.getCurrentPosition());
+            telemetry.addData("left front", LF.getCurrentPosition());
         }
 
 
     }
 
     void TurnDegrees(int angle){
+        currentHeading = gyroSensor.getHeading();
+        if (currentHeading > 180) {
+            currentHeading -= 360;
+        }
+        targetHeading = currentHeading + angle;
+        while(currentHeading != targetHeading){
+            if(targetHeading > currentHeading){
+                angleDifference = targetHeading - currentHeading;
+                turnPower = angleDifference *  gain;
 
+                RF.setPower(-turnPower);
+                LF.setPower(turnPower);
+
+            }
+            else if(targetHeading < currentHeading){
+                angleDifference = currentHeading - targetHeading;
+                turnPower = angleDifference *  gain;
+
+                RF.setPower(turnPower);
+                LF.setPower(-turnPower);
+            }
+            telemetry.addData("gyro", gyroSensor.getHeading());
+        }
 
 
     }
@@ -75,6 +100,8 @@ public class Auto extends LinearOpMode {
         RF = hardwareMap.dcMotor.get("RF");
         LB = hardwareMap.dcMotor.get("LB");
         RB = hardwareMap.dcMotor.get("RB");
+        gyroSensor = hardwareMap.gyroSensor.get("GY");
+
         double initialvalueRF = RF.getCurrentPosition();
         double initialvalueLF = LF.getCurrentPosition();
     }
