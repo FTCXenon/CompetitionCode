@@ -20,6 +20,8 @@ public class Auto extends LinearOpMode {
 
     GyroSensor gyroSensor;
 
+    ColorSensor colorSensor;
+
     double speed = 0.2;
     double targetHeading = 0.0;
     double gain = 0.007;
@@ -34,6 +36,11 @@ public class Auto extends LinearOpMode {
     double currentRight;
     double currentLeft;
     double currentHeading = 0.0;
+
+    double red;
+    double blue;
+    double green;
+    boolean teamcolor;
     void DriveDistance(double distance) {
 
         double targetValue = (distance / (3.141592653589793238462 * 4)) * 1440;
@@ -68,9 +75,6 @@ public class Auto extends LinearOpMode {
 
     void TurnDegrees(int angle){
         currentHeading = gyroSensor.getHeading();
-        if (currentHeading > 180) {
-            currentHeading -= 360;
-        }
         targetHeading = currentHeading + angle;
         while(currentHeading != targetHeading){
             if(targetHeading > currentHeading){
@@ -93,17 +97,46 @@ public class Auto extends LinearOpMode {
 
 
     }
-    @Override
-    public void runOpMode() throws InterruptedException {
+    boolean SenseColor(String color){
+        blue = colorSensor.blue();
+        red  = colorSensor.red();
+        if(color == "blue") {
+            if(blue > 0.0) {
+
+                teamcolor = true;
+
+            }
+            else {
+                teamcolor = false;
+            }
+        }
+        if(color== "red"){
+            if(red > 0.0){
+
+                teamcolor = true;
+
+            }
+            else{
+                teamcolor = false;
+            }
+
+
+        }
+        return teamcolor;
+    }
+
+    @Override public void runOpMode() throws InterruptedException {
         waitForStart();
         LF = hardwareMap.dcMotor.get("LF");
         RF = hardwareMap.dcMotor.get("RF");
         LB = hardwareMap.dcMotor.get("LB");
         RB = hardwareMap.dcMotor.get("RB");
         gyroSensor = hardwareMap.gyroSensor.get("GY");
+        colorSensor = hardwareMap.colorSensor.get("CS");
 
-        double initialvalueRF = RF.getCurrentPosition();
-        double initialvalueLF = LF.getCurrentPosition();
+        DriveDistance(5);
+        TurnDegrees(45);
+        TurnDegrees(-45);
     }
 
 
