@@ -17,6 +17,7 @@ public class Auto extends LinearOpMode {
     DcMotor RF;
     DcMotor LB;
     DcMotor RB;
+    DcMotor BS;
 
     GyroSensor gyroSensor;
 
@@ -124,19 +125,35 @@ public class Auto extends LinearOpMode {
         }
         return teamcolor;
     }
+    void DriveTime(long time)throws InterruptedException{
 
+        RF.setPower(.70);
+        LF.setPower(.70);
+        RB.setPower(.70);
+        LB.setPower(.70);
+        Thread.sleep(time);
+        RF.setPower(0.0);
+        LF.setPower(0.0);
+        RB.setPower(0.0);
+        LB.setPower(0.0);
+    }
+    void ShootBall()throws InterruptedException{
+
+        BS.setPower(1.0);
+        Thread.sleep(1500);
+        BS.setPower(0.0);
+
+    }
     @Override public void runOpMode() throws InterruptedException {
         waitForStart();
         LF = hardwareMap.dcMotor.get("LF");
         RF = hardwareMap.dcMotor.get("RF");
         LB = hardwareMap.dcMotor.get("LB");
         RB = hardwareMap.dcMotor.get("RB");
+        BS = hardwareMap.dcMotor.get("BS");
         gyroSensor = hardwareMap.gyroSensor.get("GY");
         colorSensor = hardwareMap.colorSensor.get("CS");
-
-        DriveDistance(5);
-        TurnDegrees(45);
-        TurnDegrees(-45);
+        DriveTime(3000);
     }
 
 
