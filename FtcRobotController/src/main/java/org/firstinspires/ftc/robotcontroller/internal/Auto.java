@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import java.lang.Math;
 /**
  * Created by David Mindlin on 11/16/2016.
@@ -18,10 +20,12 @@ public class Auto extends LinearOpMode {
     DcMotor LB;
     DcMotor RB;
     DcMotor BS;
+    Servo servo1;
+    Servo servo2;
 
-    GyroSensor gyroSensor;
-
-    ColorSensor colorSensor;
+//    GyroSensor gyroSensor;
+//
+//    ColorSensor colorSensor;
 
     double speed = 0.2;
     double targetHeading = 0.0;
@@ -73,63 +77,63 @@ public class Auto extends LinearOpMode {
 
 
     }
-
-    void TurnDegrees(int angle){
-        currentHeading = gyroSensor.getHeading();
-        targetHeading = currentHeading + angle;
-        while(currentHeading != targetHeading){
-            if(targetHeading > currentHeading){
-                angleDifference = targetHeading - currentHeading;
-                turnPower = angleDifference *  gain;
-
-                RF.setPower(-turnPower);
-                LF.setPower(turnPower);
-
-            }
-            else if(targetHeading < currentHeading){
-                angleDifference = currentHeading - targetHeading;
-                turnPower = angleDifference *  gain;
-
-                RF.setPower(turnPower);
-                LF.setPower(-turnPower);
-            }
-            telemetry.addData("gyro", gyroSensor.getHeading());
-        }
-
-
-    }
-    boolean SenseColor(String color){
-        blue = colorSensor.blue();
-        red  = colorSensor.red();
-        if(color == "blue") {
-            if(blue > 0.0) {
-
-                teamcolor = true;
-
-            }
-            else {
-                teamcolor = false;
-            }
-        }
-        if(color== "red"){
-            if(red > 0.0){
-
-                teamcolor = true;
-
-            }
-            else{
-                teamcolor = false;
-            }
-
-
-        }
-        return teamcolor;
-    }
+//
+//    void TurnDegrees(int angle){
+//        currentHeading = gyroSensor.getHeading();
+//        targetHeading = currentHeading + angle;
+//        while(currentHeading != targetHeading){
+//            if(targetHeading > currentHeading){
+//                angleDifference = targetHeading - currentHeading;
+//                turnPower = angleDifference *  gain;
+//
+//                RF.setPower(-turnPower);
+//                LF.setPower(turnPower);
+//
+//            }
+//            else if(targetHeading < currentHeading){
+//                angleDifference = currentHeading - targetHeading;
+//                turnPower = angleDifference *  gain;
+//
+//                RF.setPower(turnPower);
+//                LF.setPower(-turnPower);
+//            }
+//            telemetry.addData("gyro", gyroSensor.getHeading());
+//        }
+//
+//
+//    }
+//    boolean SenseColor(String color){
+//        blue = colorSensor.blue();
+//        red  = colorSensor.red();
+//        if(color == "blue") {
+//            if(blue > 0.0) {
+//
+//                teamcolor = true;
+//
+//            }
+//            else {
+//                teamcolor = false;
+//            }
+//        }
+//        if(color== "red"){
+//            if(red > 0.0){
+//
+//                teamcolor = true;
+//
+//            }
+//            else{
+//                teamcolor = false;
+//            }
+//
+//
+//        }
+//        return teamcolor;
+//    }
     void DriveTime(long time)throws InterruptedException{
 
-        RF.setPower(.70);
+        RF.setPower(-.70);
         LF.setPower(.70);
-        RB.setPower(.70);
+        RB.setPower(-.70);
         LB.setPower(.70);
         Thread.sleep(time);
         RF.setPower(0.0);
@@ -151,12 +155,10 @@ public class Auto extends LinearOpMode {
         LB = hardwareMap.dcMotor.get("LB");
         RB = hardwareMap.dcMotor.get("RB");
         BS = hardwareMap.dcMotor.get("BS");
-        gyroSensor = hardwareMap.gyroSensor.get("GY");
-        colorSensor = hardwareMap.colorSensor.get("CS");
+//        gyroSensor = hardwareMap.gyroSensor.get("GY");
+//        colorSensor = hardwareMap.colorSensor.get("CS");
         DriveTime(3000);
     }
 
 
 }
-
-

@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 /**
  * Created by David Mindlin on 11/16/2016.
  */
-@Autonomous(name = "ColorCalibrate")
 public class ColorCalibrate extends LinearOpMode{
     ColorSensor CS;
 
