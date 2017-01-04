@@ -31,9 +31,10 @@ public class SwerveDriveTeleop extends LinearOpMode{
     double Joystick_X;
     double magnitude;
     double angle;
+    double motorPower;
 
-
-    DcMotor ballShooter;
+    DcMotor ballShooterLeft;
+    DcMotor ballShooterRight;
     DcMotor intakeMechanism;
 
     @Override public void runOpMode() throws InterruptedException {
@@ -52,11 +53,12 @@ public class SwerveDriveTeleop extends LinearOpMode{
         SLB = hardwareMap.servo.get("SLB");
         SRB = hardwareMap.servo.get("SRB");
 
-        ballShooter = hardwareMap.dcMotor.get("BS");
+        ballShooterLeft = hardwareMap.dcMotor.get("BSL");
+        ballShooterRight = hardwareMap.dcMotor.get("BSR");
         intakeMechanism = hardwareMap.dcMotor.get("IM");
 
         while(opModeIsActive()){
-
+            //Joystick Strafing
             Joystick_X = gamepad1.left_stick_x;
             Joystick_Y = gamepad1.left_stick_y;
             magnitude = Math.sqrt(Joystick_X*Joystick_X + Joystick_Y * Joystick_Y);
@@ -64,35 +66,60 @@ public class SwerveDriveTeleop extends LinearOpMode{
             if(magnitude > 0) {
                 if(Joystick_X == 0){
                     if(Joystick_Y > 0){
-
-
-
+                        motorPower = magnitude;
                     }
                     else if(Joystick_Y < 0){
-
-
-
+                        motorPower = -magnitude;
                     }
 
                 }
                 else if(Joystick_Y == 0){
                     if(Joystick_X > 0){
-
+                        motorPower = magnitude;
                     }
                     else if(Joystick_X < 0){
-
-
+                        motorPower = -magnitude;
 
                     }
-
                 }
                 else {
+                    //Figuring out the tire angle based on joystick position.
+
                     angle = Math.atan(Joystick_Y / Joystick_X);
+
+                    //If the hypotenuse is in the II or III quadrant, add 180 degrees, otherwise, do nothing.
+
+                    if(Joystick_X < 0 && Joystick_Y > 0){
+
+                        angle += 180;
+
+                    }
+                    else if(Joystick_X < 0 && Joystick_Y < 0){
+
+                        angle += 180;
+
+                    }
                 }
 
             }
 
 
+            if(gamepad1.right_trigger > 0) {
+                ballShooterLeft.setPower(.60);
+                ballShooterRight.setPower(.60);
+            }
+            else {
+                ballShooterLeft.setPower(0.0);
+                ballShooterRight.setPower(0.0);
+            }
+
+
+            if(magnitude == 0)motorPower = 0;
+
+            LF.setPower(motorPower);
+            RF.setPower(motorPower);
+            LB.setPower(motorPower);
+            RB.setPower(motorPower);
 
         }
 
